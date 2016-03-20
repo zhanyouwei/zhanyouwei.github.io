@@ -1,0 +1,423 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>开启nginx服务器gzip压缩 - 前端运维小记 | Youwei</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="占友伟">
+    
+    <meta name="description" content="操作步骤
+打开nginx conf配置文件 vi nginx.conf
+在http配置中插入以下配置项(以下为我个人服务器配置，具体参数可参考下面的详细说明自定义)
+
+gzip on;gzip_min_length  2k;gzip_buffers     4 16k;gzip_http_versi">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/Tinny.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/Tinny.jpg">
+    
+
+	
+	<link href="http://cdn.bootcss.com/highlight.js/8.2/styles/railscasts.min.css" rel="stylesheet">
+	<script src="http://cdn.bootcss.com/highlight.js/8.2/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+	
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Youwei">Youwei</a></h1>
+				<h2 class="blog-motto" style="margin-left: 20px;">友伟的博客</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+                    <ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="http://blog.163.com/gis_warrior/">网易博客</a></li>
+					
+						<li><a href="http://blog.163.com/gis_warrior/profile/">关于我</a></li>
+					
+					<li>
+					
+					</li>
+                <li><div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div></li>
+
+				</ul>
+			</nav>	
+</div>
+
+    </header>
+    <div id="container" class="clearfix">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/08/26/开启nginx服务器gzip压缩/" title="开启nginx服务器gzip压缩 - 前端运维小记" itemprop="url">开启nginx服务器gzip压缩 - 前端运维小记</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://zhanyouwei.github.io" title="占友伟">占友伟</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-08-26T07:57:07.000Z" itemprop="datePublished">2015-08-26</time>
+    更新日期:<time datetime="2015-08-26T16:01:00.000Z" itemprop="dateModified">2015-08-27</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#操作步骤"><span class="toc-number">1.</span> <span class="toc-text">操作步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置详解"><span class="toc-number">2.</span> <span class="toc-text">配置详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#gzip"><span class="toc-number">2.1.</span> <span class="toc-text">gzip</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gzip_buffers"><span class="toc-number">2.2.</span> <span class="toc-text">gzip_buffers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gzip_comp_level"><span class="toc-number">2.3.</span> <span class="toc-text">gzip_comp_level</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gzip_min_length"><span class="toc-number">2.4.</span> <span class="toc-text">gzip_min_length</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gzip_http_version"><span class="toc-number">2.5.</span> <span class="toc-text">gzip_http_version</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gzip_proxied"><span class="toc-number">2.6.</span> <span class="toc-text">gzip_proxied</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gzip_types"><span class="toc-number">2.7.</span> <span class="toc-text">gzip_types</span></a></li></ol></li></ol>
+		</div>
+		
+		<h2 id="操作步骤">操作步骤</h2><ol>
+<li>打开nginx conf配置文件 vi nginx.conf</li>
+<li><p>在http配置中插入以下配置项(以下为我个人服务器配置，具体参数可参考下面的详细说明自定义)</p>
+<blockquote>
+<p>gzip on;<br><br>gzip_min_length  2k;<br><br>gzip_buffers     4 16k;<br><br>gzip_http_version 1.0;<br><br>gzip_comp_level 3;<br><br>gzip_types       text/plain text/javascript application/javascript     application/x-javascript text/css application/xml application/x-httpd-php image/jpeg image/gif image/png;<br><br>gzip_vary on;<br></p>
+</blockquote>
+</li>
+<li><p>保存退出vi</p>
+</li>
+<li>重启nginx服务器</li>
+<li>打开网页并通过控制台查看response header 是否存在<code>Content-Encoding:gzip</code>项</li>
+</ol>
+<p><strong>注意：</strong><br><code>text/javascript</code> <code>application/javascript</code> <code>application/x-javascript</code> 这三种类型都可以表示javascript类型，<br>但很多教程中都没有给全，导致我在配置的时候一直以为不成功，后来才发现原来是类型没有给全！！！</p>
+<h2 id="配置详解">配置详解</h2><h3 id="gzip">gzip</h3><p>决定是否开启gzip模块</p>
+<p>param:on|off</p>
+<p>example:<code>gzip on;</code></p>
+<h3 id="gzip_buffers">gzip_buffers</h3><p>设置gzip申请内存的大小,其作用是按块大小的倍数申请内存空间</p>
+<p>param1:int</p>
+<p>param2:int(k) 后面单位是k</p>
+<p>example: <code>gzip_buffers 4 8k;</code></p>
+<h3 id="gzip_comp_level">gzip_comp_level</h3><p>设置gzip压缩等级，等级越底压缩速度越快文件压缩比越小，反之速度越慢文件压缩比越大</p>
+<p>param:1-9</p>
+<p>example:<code>gzip_com_level 1;</code></p>
+<h3 id="gzip_min_length">gzip_min_length</h3><p>当返回内容大于此值时才会使用gzip进行压缩,以K为单位,当值为0时，所有页面都进行压缩</p>
+<p>param:int</p>
+<p>example:<code>gzip_min_length 1000;</code></p>
+<h3 id="gzip_http_version">gzip_http_version</h3><p>用于识别http协议的版本，早期的浏览器不支持gzip压缩，用户会看到乱码，所以为了支持前期版本加了此选项,目前此项基本可以忽略</p>
+<p>param: 1.0|1.1</p>
+<p>example:<code>gzip_http_version 1.0;</code></p>
+<h3 id="gzip_proxied">gzip_proxied</h3><p>Nginx做为反向代理的时候启用，<br>param:off|expired|no-cache|no-sotre|private|no_last_modified|no_etag|auth|any]</p>
+<p>expample:<code>gzip_proxied no-cache;</code></p>
+<p><code>off</code> – 关闭所有的代理结果数据压缩</p>
+<p><code>expired</code> – 启用压缩，如果header中包含”Expires”头信息</p>
+<p><code>no-cache</code> – 启用压缩，如果header中包含”Cache-Control:no-cache”头信息</p>
+<p><code>no-store</code> – 启用压缩，如果header中包含”Cache-Control:no-store”头信息</p>
+<p><code>private</code> – 启用压缩，如果header中包含”Cache-Control:private”头信息</p>
+<p><code>no_last_modified</code> – 启用压缩，如果header中包含”Last_Modified”头信息</p>
+<p><code>no_etag</code> – 启用压缩，如果header中包含“ETag”头信息</p>
+<p><code>auth</code> – 启用压缩，如果header中包含“Authorization”头信息</p>
+<p><code>any</code> – 无条件压缩所有结果数据</p>
+<h3 id="gzip_types">gzip_types</h3><p>设置需要压缩的MIME类型,非设置值不进行压缩</p>
+<p>param:text/html|application/x-javascript|text/css|application/xml</p>
+<p>example:<code>gzip_types text/html;</code></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/服务器/">服务器</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/运维/">运维</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://zhanyouwei.github.io/2015/08/26/开启nginx服务器gzip压缩/" data-title="开启nginx服务器gzip压缩 - 前端运维小记 | Youwei" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/09/06/nodejs-API-单元测试/" title="nodejs API 单元测试">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  nodejs API 单元测试</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/08/23/前后端分离的正确姿势/"  title="前后端分离的正确姿势">
+ <strong>NEXT:</strong><br/> 
+ <span>前后端分离的正确姿势
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#操作步骤"><span class="toc-number">1.</span> <span class="toc-text">操作步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置详解"><span class="toc-number">2.</span> <span class="toc-text">配置详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#gzip"><span class="toc-number">2.1.</span> <span class="toc-text">gzip</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gzip_buffers"><span class="toc-number">2.2.</span> <span class="toc-text">gzip_buffers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gzip_comp_level"><span class="toc-number">2.3.</span> <span class="toc-text">gzip_comp_level</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gzip_min_length"><span class="toc-number">2.4.</span> <span class="toc-text">gzip_min_length</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gzip_http_version"><span class="toc-number">2.5.</span> <span class="toc-text">gzip_http_version</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gzip_proxied"><span class="toc-number">2.6.</span> <span class="toc-text">gzip_proxied</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gzip_types"><span class="toc-number">2.7.</span> <span class="toc-text">gzip_types</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	
+	<section class="author-info">
+		
+			<p> 不想做产品的前端不是好爸爸~</p>
+		
+		
+			<p>	有点强迫症，主要是受不了自己。</p>
+		
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/zhanyouwei" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/zhanyouwei" target="_blank" title="github"></a>
+		
+		
+	</div>
+</div>
+<aside class="clearfix">
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/前端/" title="前端">前端<sup>2</sup></a></li>
+		
+			<li><a href="/categories/好文推荐/" title="好文推荐">好文推荐<sup>2</sup></a></li>
+		
+			<li><a href="/categories/服务端/" title="服务端">服务端<sup>1</sup></a></li>
+		
+			<li><a href="/categories/源码分析/" title="源码分析">源码分析<sup>1</sup></a></li>
+		
+			<li><a href="/categories/生活/" title="生活">生活<sup>2</sup></a></li>
+		
+			<li><a href="/categories/运维/" title="运维">运维<sup>1</sup></a></li>
+		
+			<li><a href="/categories/随笔/" title="随笔">随笔<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Backbone/" title="Backbone">Backbone<sup>1</sup></a></li>
+		
+			<li><a href="/tags/node-js/" title="node.js">node.js<sup>2</sup></a></li>
+		
+			<li><a href="/tags/oauth2-0/" title="oauth2.0">oauth2.0<sup>1</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>1</sup></a></li>
+		
+			<li><a href="/tags/前端造世界/" title="前端造世界">前端造世界<sup>1</sup></a></li>
+		
+			<li><a href="/tags/改变/" title="改变">改变<sup>2</sup></a></li>
+		
+			<li><a href="/tags/服务器/" title="服务器">服务器<sup>1</sup></a></li>
+		
+			<li><a href="/tags/程序设计/" title="程序设计">程序设计<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  //back to top
+  function backToTop(){
+    var buttonHTML = $("<a href=\"#top\" id=\"back-top\">" + "<span>Back to Top</span></a>");
+    buttonHTML.appendTo($("body"));
+    var buttonToTop = $("#back-top");
+    // hide #back-top first
+    buttonToTop.hide();
+
+    // fade in #back-top
+    $(function() {
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 200) {
+                buttonToTop.fadeIn();
+            } else {
+                buttonToTop.fadeOut();
+            }
+        });
+        // scroll body to 0px on click
+        buttonToTop.click(function() {
+            $('body,html').animate({
+                scrollTop: 0
+            }, 800);
+            return false;
+        });
+    });
+  }
+  backToTop();
+
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      ta = $('#toc.toc-aside');
+  $(window).resize(function(){
+    getSize();
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      
+      $('#toc.toc-aside').css('display', 'none');
+      
+    }
+  });
+
+  var show = true;
+  c.click(function(){
+    if(show == true){
+        a.addClass('fadeOut').css('display', 'none');
+        ta.css('display', 'block').addClass('fadeIn');
+        m.addClass('moveMain');
+    }else{
+        a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');
+        ta.css('display', 'none');
+        m.removeClass('moveMain');
+        $('#toc.toc-aside').css('display', 'none');
+    }
+    show = !show;
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,240-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});
+</script>
+
+
+
+
+
+
+  </body>
+</html>

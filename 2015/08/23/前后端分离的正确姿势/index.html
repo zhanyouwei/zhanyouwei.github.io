@@ -1,0 +1,433 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>前后端分离的正确姿势 | Youwei</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="占友伟">
+    
+    <meta name="description" content="人生的意义不在于稳定，而在于变迁。
+
+怎么开场？我又不是作家，当然是直奔主题！
+前后端分离其实说起来很简单
+
+不就是将前后端工作分开进行，将旧时代的同步改造成异步嘛
+
+但是这里面的坑也真是够多了：
+
+
+前后端分离了，哪些工作由前端做，哪些工作由后端做？
+前后端分离了，API规范有谁来定？
+前后端分离">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/Tinny.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/Tinny.jpg">
+    
+
+	
+	<link href="http://cdn.bootcss.com/highlight.js/8.2/styles/railscasts.min.css" rel="stylesheet">
+	<script src="http://cdn.bootcss.com/highlight.js/8.2/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+	
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Youwei">Youwei</a></h1>
+				<h2 class="blog-motto" style="margin-left: 20px;">友伟的博客</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+                    <ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="http://blog.163.com/gis_warrior/">网易博客</a></li>
+					
+						<li><a href="http://blog.163.com/gis_warrior/profile/">关于我</a></li>
+					
+					<li>
+					
+					</li>
+                <li><div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div></li>
+
+				</ul>
+			</nav>	
+</div>
+
+    </header>
+    <div id="container" class="clearfix">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/08/23/前后端分离的正确姿势/" title="前后端分离的正确姿势" itemprop="url">前后端分离的正确姿势</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://zhanyouwei.github.io" title="占友伟">占友伟</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-08-23T15:20:24.000Z" itemprop="datePublished">2015-08-23</time>
+    更新日期:<time datetime="2015-08-30T15:37:00.000Z" itemprop="dateModified">2015-08-30</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+		</div>
+		
+		<blockquote>
+<p>人生的意义不在于稳定，而在于变迁。</p>
+</blockquote>
+<p>怎么开场？我又不是作家，当然是直奔主题！</p>
+<p>前后端分离其实说起来很简单</p>
+<blockquote>
+<p>不就是将前后端工作分开进行，将旧时代的同步改造成异步嘛</p>
+</blockquote>
+<p>但是这里面的坑也真是够多了：</p>
+<blockquote>
+<ol>
+<li>前后端分离了，哪些工作由前端做，哪些工作由后端做？</li>
+<li>前后端分离了，API规范有谁来定？</li>
+<li>前后端分离了，如何在对接中摆出正确的姿势？</li>
+</ol>
+</blockquote>
+<p>说说我最近遇到的问题吧！</p>
+<p>我们公司现在前后端工作人员的配比是3:1，为啥这样咧？因为我们做的是一个Web APP应用嘛~</p>
+<p>由于没有做过管理工作，本以为程序员不需要什么管理，只要任务分配好了，自然项目就会有条不紊的进行下去了，当然事情没有这么简单。并不是所有人都会想你一样的付出，毕竟大部分人还是只是把它当做一份工作而已。工作在哪里又有什么不同呢？</p>
+<p><strong>终于，我开始意识到，管理！我缺少的东西，我需要它！</strong></p>
+<p>说一些我的经验吧：</p>
+<ul>
+<li>管理自己</li>
+<li>严格管理自己</li>
+<li>苛刻的严格的要求自己</li>
+<li>在团队中合理的分配任务，根据每个人的特长合理的分配任务；通过任务让同事之间进行互动，互相交流自己的经验，</li>
+<li>提高团队成员之间的沟通效率</li>
+</ul>
+<p>举个自己遇到的问题：</p>
+<blockquote>
+<p>后端工程师和我抱怨，写接口的效率太低了，还得考虑前端的业务逻辑，以及接口定义，希望能够提高工作效率；前端工程师和我抱怨，在与后端工程师对接接口的过程中，浪费了大量的时间，原因在于后端的接口总是改来改去，同时不能保证每次改动都能够正确满足需求。</p>
+</blockquote>
+<p>在这种情况下，前后端分离开发的效率其实是很低的，我的做法是在前后端开发的中间添加了一层API协议，这个协议是在项目中每一个功能开发之前就被设计好的，前后端人员只需要严格遵循这个协议进行开发即可。<br>协议中规定了，以下几个方面：</p>
+<blockquote>
+<ol>
+<li>接口名</li>
+<li>接口描述</li>
+<li>接口URL地址</li>
+<li>接口调用方式</li>
+<li>接口请求参数，及参数说明</li>
+<li>接口返回参数，及参数说明</li>
+<li>接口调用示例</li>
+</ol>
+</blockquote>
+<p>前端人员可以根据文档进行数据mock，后端可以根据文档提高自己的产出，这就是目前我们团队采用的一些不成熟的方式，如果你有更好的方式，不妨联系我，我们可以一起讨论，让前后端协作更加高效！</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/前端造世界/">前端造世界</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/前端/">前端</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://zhanyouwei.github.io/2015/08/23/前后端分离的正确姿势/" data-title="前后端分离的正确姿势 | Youwei" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/08/26/开启nginx服务器gzip压缩/" title="开启nginx服务器gzip压缩 - 前端运维小记">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  开启nginx服务器gzip压缩 - 前端运维小记</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/04/18/论代码可读性/"  title="论代码可读性">
+ <strong>NEXT:</strong><br/> 
+ <span>论代码可读性
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  
+  </div>
+
+<div id="asidepart">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	
+	<section class="author-info">
+		
+			<p> 不想做产品的前端不是好爸爸~</p>
+		
+		
+			<p>	有点强迫症，主要是受不了自己。</p>
+		
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/zhanyouwei" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/zhanyouwei" target="_blank" title="github"></a>
+		
+		
+	</div>
+</div>
+<aside class="clearfix">
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/前端/" title="前端">前端<sup>2</sup></a></li>
+		
+			<li><a href="/categories/好文推荐/" title="好文推荐">好文推荐<sup>2</sup></a></li>
+		
+			<li><a href="/categories/服务端/" title="服务端">服务端<sup>1</sup></a></li>
+		
+			<li><a href="/categories/源码分析/" title="源码分析">源码分析<sup>1</sup></a></li>
+		
+			<li><a href="/categories/生活/" title="生活">生活<sup>2</sup></a></li>
+		
+			<li><a href="/categories/运维/" title="运维">运维<sup>1</sup></a></li>
+		
+			<li><a href="/categories/随笔/" title="随笔">随笔<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Backbone/" title="Backbone">Backbone<sup>1</sup></a></li>
+		
+			<li><a href="/tags/node-js/" title="node.js">node.js<sup>2</sup></a></li>
+		
+			<li><a href="/tags/oauth2-0/" title="oauth2.0">oauth2.0<sup>1</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>1</sup></a></li>
+		
+			<li><a href="/tags/前端造世界/" title="前端造世界">前端造世界<sup>1</sup></a></li>
+		
+			<li><a href="/tags/改变/" title="改变">改变<sup>2</sup></a></li>
+		
+			<li><a href="/tags/服务器/" title="服务器">服务器<sup>1</sup></a></li>
+		
+			<li><a href="/tags/程序设计/" title="程序设计">程序设计<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  //back to top
+  function backToTop(){
+    var buttonHTML = $("<a href=\"#top\" id=\"back-top\">" + "<span>Back to Top</span></a>");
+    buttonHTML.appendTo($("body"));
+    var buttonToTop = $("#back-top");
+    // hide #back-top first
+    buttonToTop.hide();
+
+    // fade in #back-top
+    $(function() {
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 200) {
+                buttonToTop.fadeIn();
+            } else {
+                buttonToTop.fadeOut();
+            }
+        });
+        // scroll body to 0px on click
+        buttonToTop.click(function() {
+            $('body,html').animate({
+                scrollTop: 0
+            }, 800);
+            return false;
+        });
+    });
+  }
+  backToTop();
+
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      ta = $('#toc.toc-aside');
+  $(window).resize(function(){
+    getSize();
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      
+      $('#toc.toc-aside').css('display', 'none');
+      
+    }
+  });
+
+  var show = true;
+  c.click(function(){
+    if(show == true){
+        a.addClass('fadeOut').css('display', 'none');
+        ta.css('display', 'block').addClass('fadeIn');
+        m.addClass('moveMain');
+    }else{
+        a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');
+        ta.css('display', 'none');
+        m.removeClass('moveMain');
+        $('#toc.toc-aside').css('display', 'none');
+    }
+    show = !show;
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,240-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});
+</script>
+
+
+
+
+
+
+  </body>
+</html>
