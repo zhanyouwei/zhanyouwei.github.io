@@ -4,21 +4,14 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Node.js API - oauth2.0授权 | Youwei</title>
+    <title>我为什么不再用印象笔记 | Youwei</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="占友伟">
     
-    <meta name="description" content="这两天在折腾API oauth2.0认证这块，先占坑吧~~
-
-主要涉及到这几方面：
-
-node.js API 开发
-oauth2.0 服务端开发
-node-redis 配置
-
-node.js API 开发这里采用node.js + express的方式提供API服务
-oauth2.0redis最近天">
+    <meta name="description" content="我为什么不再用印象笔记作为一枚印象笔记的铁杆粉，印象笔记曾经几乎存储了我所有的信息。也许我该先介绍一下，我是怎么使用印象笔记的。
+文字记录所有需要用文字存储的信息，我几乎都存在里面，从没觉得如此方便
+图片记录自从买了高级帐户以后，使用印象笔记便更加肆无忌惮了，对待印象笔记每月的存储空间配额如对待每个">
     
     
     
@@ -79,15 +72,15 @@ oauth2.0redis最近天">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/08/Node-js-API-oauth2-0授权/" title="Node.js API - oauth2.0授权" itemprop="url">Node.js API - oauth2.0授权</a>
+      <a href="/2016/04/06/我为什么不再用印象笔记/" title="我为什么不再用印象笔记" itemprop="url">我为什么不再用印象笔记</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://zhanyouwei.github.io" title="占友伟">占友伟</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-09-08T15:48:52.000Z" itemprop="datePublished">2015-09-08</time>
-    更新日期:<time datetime="2015-09-17T14:26:29.000Z" itemprop="dateModified">2015-09-17</time>
+    <time datetime="2016-04-06T15:53:27.000Z" itemprop="datePublished">2016-04-06</time>
+    更新日期:<time datetime="2016-04-06T15:54:13.000Z" itemprop="dateModified">2016-04-06</time>
     
   </p>
 </header>
@@ -96,39 +89,29 @@ oauth2.0redis最近天">
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#node-js_API_开发"><span class="toc-number">1.</span> <span class="toc-text">node.js API 开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#oauth2-0"><span class="toc-number">2.</span> <span class="toc-text">oauth2.0</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#redis"><span class="toc-number">3.</span> <span class="toc-text">redis</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#最近天气转凉，大家请注意防寒。。。。本人已中招。。。。。。"><span class="toc-number">3.1.</span> <span class="toc-text">最近天气转凉，大家请注意防寒。。。。本人已中招。。。。。。</span></a></li></ol></li></ol>
+		
 		</div>
 		
-		<blockquote>
-<p>这两天在折腾API oauth2.0认证这块，先占坑吧~~</p>
-</blockquote>
-<p>主要涉及到这几方面：</p>
-<ol>
-<li>node.js API 开发</li>
-<li>oauth2.0 服务端开发</li>
-<li>node-redis 配置</li>
-</ol>
-<h3 id="node-js_API_开发">node.js API 开发</h3><p>这里采用node.js + express的方式提供API服务</p>
-<h3 id="oauth2-0">oauth2.0</h3><h3 id="redis">redis</h3><h4 id="最近天气转凉，大家请注意防寒。。。。本人已中招。。。。。。">最近天气转凉，大家请注意防寒。。。。本人已中招。。。。。。</h4>  
+		<p>我为什么不再用印象笔记<br>作为一枚印象笔记的铁杆粉，印象笔记曾经几乎存储了我所有的信息。也许我该先介绍一下，我是怎么使用印象笔记的。</p>
+<p>文字记录<br>所有需要用文字存储的信息，我几乎都存在里面，从没觉得如此方便</p>
+<p>图片记录<br>自从买了高级帐户以后，使用印象笔记便更加肆无忌惮了，对待印象笔记每月的存储空间配额如对待每个月的流量一般，是一定想尽办法用完的</p>
+<p>网页剪藏<br>这是我重度依赖的一个功能，我设有一个剪藏笔记本，曾经，我几乎想要把整个互联网剪进去。</p>
+<p>音频录制<br>印象笔记可以直接录制音频进行存储，我觉得很方便，结果几年下来我没有录制过一个音频，但不影响我认为它是一个好功能。</p>
+<p>我为什么不在使用呢？<br>因为，它实在太麻烦了。</p>
+<p>大多数情况下，我只是想记录我的想法，可是当我在手机上打开印象笔记，这启动速度，简直可以和支付宝媲美了，三秒后。。。他妈的！我居然设置了指纹解锁！用久了的iPhone，指纹解锁的失败率简直不能忍受，又三秒后。。。很大几率我要手动输入密码解锁。。。通常我花了10秒钟才进入笔记。然后我需要选择一个笔记本，像我这种奇葩，至少要有几十个笔记本的。恩，就这样我花了二十秒还没开始写，然后就没有然后了，我已近不想写任何东西了。尝试了几次，便放弃了使用印象笔记了。</p>
+<p>现在我在用什么<br>当我决定要将这脑袋里面所想的事记录下来的时候，我首先想到了使用Markdown，然而跨平台的Markdown应用确实少的可怜。当然付费的那几款都是不错的，也是跨平台的。然而，遇上了我这么个小抠鬼，我自然是不愿意花钱的。我都还不知道我能坚持多久呢，是不是？这时候苹果更新了系统，备忘录得到了升级，升级后的备忘录简直是以前的加强版，功能媲美印象笔记（印象笔记还要更加强大一些），只作为记录文字的话，是足够了的。跨平台，这是不用说的（前提是你得拥有Mac和iPhone）。</p>
+<p>我还要吐槽什么<br>在手机上写文章，无论你用什么应用，我相信你得大拇指都会被打残了的。所以，跨平台并不是重点，重点是你有两只强壮的大拇哥！</p>
+<p>写在最后<br>当然，我现在还在使用印象笔记，只是记录想法的时候不再使用了，对于它的繁琐，我还是可以忍受的，毕竟里面存了很多重要的东西。不设密码怎么行呢？对不对？简洁毕竟是有条件的。</p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/node-js/">node.js</a><a href="/tags/oauth2-0/">oauth2.0</a><a href="/tags/redis/">redis</a>
-  </div>
-
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/服务端/">服务端</a>
-</div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://zhanyouwei.github.io/2015/09/08/Node-js-API-oauth2-0授权/" data-title="Node.js API - oauth2.0授权 | Youwei" data-tsina="null" class="share clearfix">
+  <div data-url="http://zhanyouwei.github.io/2016/04/06/我为什么不再用印象笔记/" data-title="我为什么不再用印象笔记 | Youwei" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -137,19 +120,11 @@ oauth2.0redis最近天">
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/09/18/九月好文推荐/" title="九月好文推荐">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  九月好文推荐</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/09/06/nodejs-API-单元测试/"  title="nodejs API 单元测试">
+<a href="/2016/04/03/关于读书/"  title="关于读书">
  <strong>NEXT:</strong><br/> 
- <span>nodejs API 单元测试
+ <span>关于读书
 </span>
 </a>
 </div>
@@ -161,7 +136,7 @@ oauth2.0redis最近天">
       
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#node-js_API_开发"><span class="toc-number">1.</span> <span class="toc-text">node.js API 开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#oauth2-0"><span class="toc-number">2.</span> <span class="toc-text">oauth2.0</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#redis"><span class="toc-number">3.</span> <span class="toc-text">redis</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#最近天气转凉，大家请注意防寒。。。。本人已中招。。。。。。"><span class="toc-number">3.1.</span> <span class="toc-text">最近天气转凉，大家请注意防寒。。。。本人已中招。。。。。。</span></a></li></ol></li></ol>
+  
   </div>
 
 <div id="asidepart">
