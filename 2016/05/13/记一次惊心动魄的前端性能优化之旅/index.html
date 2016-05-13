@@ -1,0 +1,449 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>记一次惊心动魄的前端性能优化之旅 | Youwei</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="占友伟">
+    
+    <meta name="description" content="题记：可以把这篇文章看成一次事故记录，一次线上事故。此刻我能坐在这里写下这篇文章，要感谢我司没有开除我，或者说我解决了这次性能问题，所以我有机会写下这篇文章。
+起因我司全球购业务改版，将原生的全球购页面采用Hybird模式开发，这是我司H5页面第一次出现在以及入口位置，作为开发者显得很是兴奋。
+第一">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/Tinny.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/Tinny.jpg">
+    
+
+	
+	<link href="http://cdn.bootcss.com/highlight.js/8.2/styles/railscasts.min.css" rel="stylesheet">
+	<script src="http://cdn.bootcss.com/highlight.js/8.2/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+	
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Youwei">Youwei</a></h1>
+				<h2 class="blog-motto" style="margin-left: 20px;">友伟的博客</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+                    <ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="http://blog.163.com/gis_warrior/">网易博客</a></li>
+					
+						<li><a href="http://blog.163.com/gis_warrior/profile/">关于我</a></li>
+					
+					<li>
+					
+					</li>
+                <li><div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div></li>
+
+				</ul>
+			</nav>	
+</div>
+
+    </header>
+    <div id="container" class="clearfix">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/05/13/记一次惊心动魄的前端性能优化之旅/" title="记一次惊心动魄的前端性能优化之旅" itemprop="url">记一次惊心动魄的前端性能优化之旅</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://zhanyouwei.github.io" title="占友伟">占友伟</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2016-05-13T13:39:51.000Z" itemprop="datePublished">2016-05-13</time>
+    更新日期:<time datetime="2016-05-13T13:42:03.000Z" itemprop="dateModified">2016-05-13</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#起因"><span class="toc-number">1.</span> <span class="toc-text">起因</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#第一阶段_-_问题初显"><span class="toc-number">1.1.</span> <span class="toc-text">第一阶段 - 问题初显</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#问题"><span class="toc-number">1.1.1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#方案"><span class="toc-number">1.1.2.</span> <span class="toc-text">方案</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第二阶段_-_引起重视"><span class="toc-number">1.2.</span> <span class="toc-text">第二阶段 - 引起重视</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#问题-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#方案-1"><span class="toc-number">1.2.2.</span> <span class="toc-text">方案</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#实施"><span class="toc-number">1.2.3.</span> <span class="toc-text">实施</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一些经验"><span class="toc-number">1.2.4.</span> <span class="toc-text">一些经验</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第三阶段_-_全面升级"><span class="toc-number">1.3.</span> <span class="toc-text">第三阶段 - 全面升级</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#问题-2"><span class="toc-number">1.3.1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#方案-2"><span class="toc-number">1.3.2.</span> <span class="toc-text">方案</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-_去除iScroll"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">1. 去除iScroll</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-_高性能DOM渲染"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">2. 高性能DOM渲染</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#最终得出以下几点改进："><span class="toc-number">1.3.3.</span> <span class="toc-text">最终得出以下几点改进：</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-_简化浏览器重绘的复杂度"><span class="toc-number">1.3.3.1.</span> <span class="toc-text">1. 简化浏览器重绘的复杂度</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-_减小浏览器重绘区域"><span class="toc-number">1.3.3.2.</span> <span class="toc-text">2. 减小浏览器重绘区域</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-_避免大规模、复杂的布局"><span class="toc-number">1.3.3.3.</span> <span class="toc-text">3. 避免大规模、复杂的布局</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-_优先使用渲染层合并属性"><span class="toc-number">1.3.3.4.</span> <span class="toc-text">4. 优先使用渲染层合并属性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-_优化JavaScript的执行效率"><span class="toc-number">1.3.3.5.</span> <span class="toc-text">5. 优化JavaScript的执行效率</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#写在最后"><span class="toc-number">2.</span> <span class="toc-text">写在最后</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#THKS_Google"><span class="toc-number">2.1.</span> <span class="toc-text">THKS Google</span></a></li></ol></li></ol>
+		</div>
+		
+		<p>题记：可以把这篇文章看成一次事故记录，一次线上事故。此刻我能坐在这里写下这篇文章，要感谢我司没有开除我，或者说我解决了这次性能问题，所以我有机会写下这篇文章。</p>
+<h2 id="起因">起因</h2><p>我司全球购业务改版，将原生的全球购页面采用Hybird模式开发，这是我司H5页面第一次出现在以及入口位置，作为开发者显得很是兴奋。</p>
+<h3 id="第一阶段_-_问题初显">第一阶段 - 问题初显</h3><h4 id="问题">问题</h4><p>根据设计稿，如期完成工作，测试也已准备好，部分Android低端机中显示出卡顿现象，出于对自身技能的肯定，误以为是硬件性能问题，并未引起过多关注。</p>
+<h4 id="方案">方案</h4><p>未引起重视，并没有做出相应处理。</p>
+<h3 id="第二阶段_-_引起重视">第二阶段 - 引起重视</h3><h4 id="问题-1">问题</h4><p>上到pre环境后，发现部分iPhone机型出现崩溃，初步排查在iOS 8.4系统上DOM节点高度达到10000px以上奔溃率100%，其他8-9之间的系统版本当分页数据使得DOM达到10000px以上快速滚动会出现卡顿，9以上iOS系统与Android4.4以上系统均表现良好。定位问题后，迅速进行更多特殊机型与相应系统的测试，期间借遍了公司几百位小伙伴的手机，在此向他们表示感谢。</p>
+<p>你问我为什么，我只能说测试环境没有这么多数据，至于为什么没有？呵呵，你懂得！</p>
+<h4 id="方案-1">方案</h4><ol>
+<li>iOS将UIWebview切换为WKWebview，WKWebview为iOS在8以上系统中新加入的一个高性能Webview，具体哪里好，可以<a href="http://blog.initlabs.com/post/100113463211/wkwebview-vs-uiwebview" target="_blank" rel="external">点这里</a>  <a href="http://developer.telerik.com/featured/why-ios-8s-wkwebview-is-a-big-deal-for-hybrid-development/" target="_blank" rel="external">这里</a> 还有<a href="http://www.jianshu.com/p/f94cad074196" target="_blank" rel="external">这里</a> ，由于iOS已经发版（对的，在H5页面还在pre环境测试的时候，iOS已经发版了）这个方案只能作为下一个版本了</li>
+<li>临时降低数据显示总量，同时寻找性能瓶颈（这里要和运营的同学说声sorry）</li>
+</ol>
+<h4 id="实施">实施</h4><p>针对iOS 8以下以及8.4系统 Android 4.4以下系统做自动降级处理。</p>
+<h4 id="一些经验">一些经验</h4><ol>
+<li>测试不能仅仅做功能测试，还要做性能测试</li>
+<li>开发人员常使用chrome、Firefox等浏览器的开发工具进行开发，<strong>这里要注意的是：浏览器开发工具只能模拟手机UI与交互，其性能要远远强于手机环境</strong>。</li>
+<li>开发过程中常用微信、QQ、手机浏览器进行测试，这是不可取的，因为最终环境不一，容易给自己造成错觉，觉得在微信 QQ的Webview中没问题，就OK了</li>
+<li>deadline 真的要好好定。很多人认为H5很灵活，并不依赖于iOS发版，可以将测试定在iOS发版的那几天进行。其实这真的是巨大的错误，后面我会说明。</li>
+</ol>
+<h3 id="第三阶段_-_全面升级">第三阶段 - 全面升级</h3><p>经过降级后，仍然存在很多问题，同时我们也在抓紧研究后续升级方案。经过协调，将系统切回了老版本暂时使用原生替代H5（感觉很受打击~）。</p>
+<h4 id="问题-2">问题</h4><ol>
+<li><strong>数据量不足，对运营影响很大</strong></li>
+<li>对降级机型的体验很差，数据统计显示，受影响的机型还是有一定份额</li>
+<li>由于此次H5是存在于以及目录，所以设计上是常驻内存以保证体验，UIWebview的内存一直得不到释放，同事系统中其他页面也使用到了UIWebview，长时间使用仍然会出现崩溃。</li>
+<li>距离iOS和Android下一次发版还有一段时间，不可能一直降级</li>
+</ol>
+<p><strong>无论如何解决性能问题，这是唯一目标！</strong></p>
+<p>经过一个星期枯燥而漫长的努力与实验，从以下几个方面彻底解决了性能瓶颈；</p>
+<h4 id="方案-2">方案</h4><h5 id="1-_去除iScroll">1. 去除iScroll</h5><p>iScroll是我们内部框架中引入的一个第三方组件,官方的介绍是「Smooth scrolling for the web」，奈何在大数据量面前性能确实令人堪忧。如果数据量少，还是推荐使用的。</p>
+<h5 id="2-_高性能DOM渲染">2. 高性能DOM渲染</h5><p>在对比了竞品，和天猫、JD等知名厂商H5实现后，确实郁闷了一段时间，同样的数据量为什么别人可以做到？最后得到两个结论：</p>
+<ol>
+<li>别人DOM节点没我们复杂，由于我们采用了内部研发的m-fast框架，框架顶层就确定了DOM结构的复杂性，例如：框架预设了整个布局为<em>上、下、左、右、中</em>的布局，即使我的页面只是一个流式布局。</li>
+<li>别人H5页面没有图片轮播！对，你没看错，一个图片轮播居然对性能影响如此之大</li>
+</ol>
+<p>居于上面这两点，我开始了DOM性能研究</p>
+<p> <img src="http://7xs2h9.com1.z0.glb.clouddn.com/blog/%E5%83%8F%E7%B4%A0%E6%B8%B2%E6%9F%93%E6%B5%81%E6%B0%B4%E7%BA%BF.jpg" alt="像素渲染流水线"></p>
+<p>m-fast框架采用模板预编译技术，将页面模板编译为js文件，在通过异步加载的方式载入，所以，网页的渲染大致符合上面这五个步骤</p>
+<ul>
+<li><strong>JavaScript</strong>。一般来说，我们会使用JavaScript来实现一些视觉变化的效果。比如用jQuery的<code>animate</code>函数做一个动画、对一个数据集进行排序、或者往页面里添加一些DOM元素等。当然，除了JavaScript，还有其他一些常用方法也可以实现视觉变化效果，比如：CSS Animations, Transitions和Web Animation API。</li>
+<li><strong>计算样式</strong>。这个过程是根据CSS选择器，比如<code>.headline</code>或<code>.nav &gt; .nav_item</code>，对每个DOM元素匹配对应的CSS样式。这一步结束之后，就确定了每个DOM元素上该应用什么CSS样式规则。</li>
+<li><strong>布局</strong>。上一步确定了每个DOM元素的样式规则，这一步就是具体计算每个DOM元素最终在屏幕上显示的大小和位置。web页面中元素的布局是相对的，因此一个元素的布局发生变化，会联动地引发其他元素的布局发生变化。比如，``元素的宽度的变化会影响其子元素的宽度，其子元素宽度的变化也会继续对其孙子元素产生影响。因此对于浏览器来说，布局过程是经常发生的。</li>
+<li><strong>绘制</strong>。绘制，本质上就是填充像素的过程。包括绘制文字、颜色、图像、边框和阴影等，也就是一个DOM元素所有的可视效果。一般来说，这个绘制过程是在多个层上完成的。</li>
+<li><p><strong>渲染层合并</strong>。由上一步可知，对页面中DOM元素的绘制是在多个层上进行的。在每个层上完成绘制过程之后，浏览器会将所有层按照合理的顺序合并成一个图层，然后显示在屏幕上。对于有位置重叠的元素的页面，这个过程尤其重要，因为一旦图层的合并顺序出错，将会导致元素显示异常。</p>
+<p><img src="http://7xs2h9.com1.z0.glb.clouddn.com/blog/frame-no-layout.jpg" alt="frame-no-layout"></p>
+</li>
+</ul>
+<p>如果你修改一个DOM元素的“paint only”属性，比如背景图片、文字颜色或阴影等，这些属性不会影响页面的布局，因此浏览器会在完成样式计算之后，跳过布局过程，只做绘制和渲染层合并过程。</p>
+<p> <img src="http://7xs2h9.com1.z0.glb.clouddn.com/blog/frame-no-layout-paint.jpg" alt="frame-no-layout-paint"></p>
+<p>如果你修改一个非样式且非绘制的CSS属性，那么浏览器会在完成样式计算之后，跳过布局和绘制的过程，直接做渲染层合并。这种方式在性能上是最理想的，对于动画和滚动这种负荷很重的渲染，我们要争取使用这种渲染流程。</p>
+<h4 id="最终得出以下几点改进："><strong>最终得出以下几点改进</strong>：</h4><h5 id="1-_简化浏览器重绘的复杂度">1. 简化浏览器重绘的复杂度</h5><p>绘制，是填充像素的过程，这些像素将最终显示在用户的屏幕上。通常，这个过程是整个渲染流水线中耗时最长的一环，因此也是最需要避免发生的一环。</p>
+<ol>
+<li>CSS属性中，除了transform和opacity之外，修改任何属性都会触发绘制</li>
+<li>如果布局被触发，那么接下来绘制<strong>一定</strong>会被触发。因为改变一个元素的几何属性就意味着该元素的所有像素都需要重新渲染！</li>
+<li>如果改变元素的非几何属性，也可能触发绘制，比如背景、文字颜色或者阴影效果，尽管这些属性的改变不会触发布局。</li>
+</ol>
+<h5 id="2-_减小浏览器重绘区域">2. 减小浏览器重绘区域</h5><p>绘制并非总是在内存中的单层画面里完成的。实际上，浏览器在必要时将会把一帧画面绘制成多层画面，然后将这若干层画面合并成一张图片显示到屏幕上。</p>
+<p> <img src="http://7xs2h9.com1.z0.glb.clouddn.com/blog/layers.jpg" alt="layers"></p>
+<p>这种绘制方式的好处是，使用tranforms来实现移动效果的元素将会被正常绘制，同时不会触发对其他元素的绘制。</p>
+<p>在页面中创建一个新的渲染层的最好方式就是使用CSS属性<code>will-change</code>，Chrome/Opera/Firefox都支持该属性。同时再与<code>transform</code>属性一起使用，就会创建一个新的组合层：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class">.moving-element</span> <span class="rules">&#123;</span><br><span class="line">  <span class="rule"><span class="attribute">will-change</span>:<span class="value"> transform</span></span>;</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>对于那些目前还不支持<code>will-change</code>属性、但支持创建渲染层的浏览器，比如Safari和Mobile Safari，你可以使用一个3D transform属性来强制浏览器创建一个新的渲染层：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class">.moving-element</span> <span class="rules">&#123;</span><br><span class="line">  <span class="rule"><span class="attribute">transform</span>:<span class="value"> <span class="function">translateZ</span>(<span class="number">0</span>)</span></span>;</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>但需要注意的是：不要创建太多的渲染层。因为每创建一个新的渲染层，就意味着新的内存分配和更复杂的层的管理。</p>
+<h5 id="3-_避免大规模、复杂的布局">3. 避免大规模、复杂的布局</h5><p>上面提到的，由于框架的限制，页面布局相对需求来说复杂很多。开发中应该尽量避免复杂的DOM结构，复杂的DOM结构更容易引起大面积的重绘。</p>
+<h5 id="4-_优先使用渲染层合并属性">4. 优先使用渲染层合并属性</h5><p>渲染层的合并，就是把页面中完成了绘制过程的部分合并成一层，然后显示在屏幕上。</p>
+<p>使用<strong>transform/opacity</strong>来实现动画效果，目前只有<strong>transforms</strong>和<strong>opacity</strong>这两个属性不会触发浏览器的布局和绘制，对网页元素这两个属性的修改会直接触发渲染层合并。</p>
+<h5 id="5-_优化JavaScript的执行效率">5. 优化JavaScript的执行效率</h5><ol>
+<li>对于动画效果的实现，避免使用setTimeout或setInterval，请使用<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame" target="_blank" rel="external">requestAnimationFrame</a>。</li>
+<li>把耗时长的JavaScript代码放到<a href="http://www.w3schools.com/html/html5_webworkers.asp" target="_blank" rel="external">Web Workers</a>中去做。</li>
+</ol>
+<p>这里可以使用<strong>Chrome DevTools</strong>的<strong>Timeline</strong>和<strong>JavaScript Profiler</strong>来分析JavaScript的性能。</p>
+<h2 id="写在最后">写在最后</h2><p>性能优化是一门做减法的艺术。我们首要要尽力简化页面渲染过程，然后要使渲染过程的每一步都尽量高效。</p>
+<h3 id="THKS_Google">THKS Google</h3><p><a href="http://csstriggers.com/" target="_blank" rel="external">CSS Triggers</a></p>
+<p><a href="https://developers.google.com/web/fundamentals/performance/rendering" target="_blank" rel="external">render performance</a></p>
+<p><a href="https://developers.google.com/web/fundamentals/performance/rendering/simplify-paint-complexity-and-reduce-paint-areas" target="_blank" rel="external">simplify paint</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Javascript/">Javascript</a><a href="/tags/前端造世界/">前端造世界</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/前端/">前端</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://zhanyouwei.github.io/2016/05/13/记一次惊心动魄的前端性能优化之旅/" data-title="记一次惊心动魄的前端性能优化之旅 | Youwei" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2016/05/04/前端应该了解的HTTP2/"  title="前端应该了解的HTTP2">
+ <strong>NEXT:</strong><br/> 
+ <span>前端应该了解的HTTP2
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#起因"><span class="toc-number">1.</span> <span class="toc-text">起因</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#第一阶段_-_问题初显"><span class="toc-number">1.1.</span> <span class="toc-text">第一阶段 - 问题初显</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#问题"><span class="toc-number">1.1.1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#方案"><span class="toc-number">1.1.2.</span> <span class="toc-text">方案</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第二阶段_-_引起重视"><span class="toc-number">1.2.</span> <span class="toc-text">第二阶段 - 引起重视</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#问题-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#方案-1"><span class="toc-number">1.2.2.</span> <span class="toc-text">方案</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#实施"><span class="toc-number">1.2.3.</span> <span class="toc-text">实施</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一些经验"><span class="toc-number">1.2.4.</span> <span class="toc-text">一些经验</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第三阶段_-_全面升级"><span class="toc-number">1.3.</span> <span class="toc-text">第三阶段 - 全面升级</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#问题-2"><span class="toc-number">1.3.1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#方案-2"><span class="toc-number">1.3.2.</span> <span class="toc-text">方案</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-_去除iScroll"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">1. 去除iScroll</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-_高性能DOM渲染"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">2. 高性能DOM渲染</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#最终得出以下几点改进："><span class="toc-number">1.3.3.</span> <span class="toc-text">最终得出以下几点改进：</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-_简化浏览器重绘的复杂度"><span class="toc-number">1.3.3.1.</span> <span class="toc-text">1. 简化浏览器重绘的复杂度</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-_减小浏览器重绘区域"><span class="toc-number">1.3.3.2.</span> <span class="toc-text">2. 减小浏览器重绘区域</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-_避免大规模、复杂的布局"><span class="toc-number">1.3.3.3.</span> <span class="toc-text">3. 避免大规模、复杂的布局</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-_优先使用渲染层合并属性"><span class="toc-number">1.3.3.4.</span> <span class="toc-text">4. 优先使用渲染层合并属性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-_优化JavaScript的执行效率"><span class="toc-number">1.3.3.5.</span> <span class="toc-text">5. 优化JavaScript的执行效率</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#写在最后"><span class="toc-number">2.</span> <span class="toc-text">写在最后</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#THKS_Google"><span class="toc-number">2.1.</span> <span class="toc-text">THKS Google</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	
+	<section class="author-info">
+		
+			<p> 不想做产品的前端不是好爸爸~</p>
+		
+		
+			<p>	有点强迫症，主要是受不了自己。</p>
+		
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/zhanyouwei" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/zhanyouwei" target="_blank" title="github"></a>
+		
+		
+	</div>
+</div>
+<aside class="clearfix">
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/前端/" title="前端">前端<sup>5</sup></a></li>
+		
+			<li><a href="/categories/好文推荐/" title="好文推荐">好文推荐<sup>2</sup></a></li>
+		
+			<li><a href="/categories/服务端/" title="服务端">服务端<sup>1</sup></a></li>
+		
+			<li><a href="/categories/源码分析/" title="源码分析">源码分析<sup>1</sup></a></li>
+		
+			<li><a href="/categories/生活/" title="生活">生活<sup>4</sup></a></li>
+		
+			<li><a href="/categories/运维/" title="运维">运维<sup>1</sup></a></li>
+		
+			<li><a href="/categories/随笔/" title="随笔">随笔<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Backbone/" title="Backbone">Backbone<sup>1</sup></a></li>
+		
+			<li><a href="/tags/HTTP2/" title="HTTP2">HTTP2<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Javascript/" title="Javascript">Javascript<sup>2</sup></a></li>
+		
+			<li><a href="/tags/node-js/" title="node.js">node.js<sup>2</sup></a></li>
+		
+			<li><a href="/tags/oauth2-0/" title="oauth2.0">oauth2.0<sup>1</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>1</sup></a></li>
+		
+			<li><a href="/tags/前端插件/" title="前端插件">前端插件<sup>1</sup></a></li>
+		
+			<li><a href="/tags/前端造世界/" title="前端造世界">前端造世界<sup>3</sup></a></li>
+		
+			<li><a href="/tags/改变/" title="改变">改变<sup>4</sup></a></li>
+		
+			<li><a href="/tags/服务器/" title="服务器">服务器<sup>1</sup></a></li>
+		
+			<li><a href="/tags/程序设计/" title="程序设计">程序设计<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  //back to top
+  function backToTop(){
+    var buttonHTML = $("<a href=\"#top\" id=\"back-top\">" + "<span>Back to Top</span></a>");
+    buttonHTML.appendTo($("body"));
+    var buttonToTop = $("#back-top");
+    // hide #back-top first
+    buttonToTop.hide();
+
+    // fade in #back-top
+    $(function() {
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 200) {
+                buttonToTop.fadeIn();
+            } else {
+                buttonToTop.fadeOut();
+            }
+        });
+        // scroll body to 0px on click
+        buttonToTop.click(function() {
+            $('body,html').animate({
+                scrollTop: 0
+            }, 800);
+            return false;
+        });
+    });
+  }
+  backToTop();
+
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      ta = $('#toc.toc-aside');
+  $(window).resize(function(){
+    getSize();
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      
+      $('#toc.toc-aside').css('display', 'none');
+      
+    }
+  });
+
+  var show = true;
+  c.click(function(){
+    if(show == true){
+        a.addClass('fadeOut').css('display', 'none');
+        ta.css('display', 'block').addClass('fadeIn');
+        m.addClass('moveMain');
+    }else{
+        a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');
+        ta.css('display', 'none');
+        m.removeClass('moveMain');
+        $('#toc.toc-aside').css('display', 'none');
+    }
+    show = !show;
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,240-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});
+</script>
+
+
+
+
+
+
+  </body>
+</html>
