@@ -1,0 +1,420 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>我是如何对待写静态页这项工作的 | Youwei</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="占友伟">
+    
+    <meta name="description" content="什么是静态页传送门
+文章起因最近负责公司商家后台项目的前端业务，可惜只是写静态页，不用写任何JS代码，作为一名新时代的FE，一开始我是拒绝的，我怎么能做这么low的事呢？前端必须要高大上啊！什么Angular、React搞起来啊！毕竟我们招聘JD上面也有相应的技能树要求的嘛。
+不就是让你切个图嘛~">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/Tinny.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/Tinny.jpg">
+    
+
+	
+	<link href="http://cdn.bootcss.com/highlight.js/8.2/styles/railscasts.min.css" rel="stylesheet">
+	<script src="http://cdn.bootcss.com/highlight.js/8.2/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+	
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Youwei">Youwei</a></h1>
+				<h2 class="blog-motto" style="margin-left: 20px;">友伟的博客</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+                    <ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="http://blog.163.com/gis_warrior/">网易博客</a></li>
+					
+						<li><a href="http://blog.163.com/gis_warrior/profile/">关于我</a></li>
+					
+					<li>
+					
+					</li>
+                <li><div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div></li>
+
+				</ul>
+			</nav>	
+</div>
+
+    </header>
+    <div id="container" class="clearfix">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/07/15/我是如何对待写静态页这项工作的/" title="我是如何对待写静态页这项工作的" itemprop="url">我是如何对待写静态页这项工作的</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://zhanyouwei.github.io" title="占友伟">占友伟</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2016-07-15T15:01:50.000Z" itemprop="datePublished">2016-07-15</time>
+    更新日期:<time datetime="2016-07-15T15:02:34.000Z" itemprop="dateModified">2016-07-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是静态页"><span class="toc-number">1.</span> <span class="toc-text">什么是静态页</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文章起因"><span class="toc-number">2.</span> <span class="toc-text">文章起因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#磨刀不误砍柴工"><span class="toc-number">3.</span> <span class="toc-text">磨刀不误砍柴工</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#开工之前先了解一下需求"><span class="toc-number">3.1.</span> <span class="toc-text">开工之前先了解一下需求</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开工，我是如何定义现代切图的"><span class="toc-number">4.</span> <span class="toc-text">开工，我是如何定义现代切图的</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#UI_Framework"><span class="toc-number">4.1.</span> <span class="toc-text">UI Framework</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动化构建"><span class="toc-number">4.2.</span> <span class="toc-text">自动化构建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#协作"><span class="toc-number">4.3.</span> <span class="toc-text">协作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#传统方式"><span class="toc-number">4.3.1.</span> <span class="toc-text">传统方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配合代码管理工具"><span class="toc-number">4.3.2.</span> <span class="toc-text">配合代码管理工具</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#我是怎么做的？"><span class="toc-number">4.3.3.</span> <span class="toc-text">我是怎么做的？</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#我的方案如下："><span class="toc-number">4.3.3.1.</span> <span class="toc-text">我的方案如下：</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一些经验"><span class="toc-number">5.</span> <span class="toc-text">一些经验</span></a></li></ol>
+		</div>
+		
+		<h2 id="什么是静态页">什么是静态页</h2><p><a href="http://baike.baidu.com/item/%E9%9D%99%E6%80%81%E7%BD%91%E9%A1%B5" target="_blank" rel="external">传送门</a></p>
+<h2 id="文章起因">文章起因</h2><p>最近负责公司商家后台项目的前端业务，可惜只是写静态页，不用写任何<code>JS</code>代码，作为一名新时代的FE，一开始我是拒绝的，我怎么能做这么low的事呢？前端必须要高大上啊！什么Angular、React搞起来啊！毕竟我们招聘JD上面也有相应的技能树要求的嘛。</p>
+<p>不就是让你切个图嘛~说了这么多，到底能不能做？</p>
+<p>所以有了这篇文章。</p>
+<h2 id="磨刀不误砍柴工">磨刀不误砍柴工</h2><h3 id="开工之前先了解一下需求">开工之前先了解一下需求</h3><p>有人会问了，写静态页还要了解需求？</p>
+<p>如果我告诉你，我是照着产品经理的Axure切呢？</p>
+<p>了解之后才发现，所有后台都有计划重做。。。。。</p>
+<h2 id="开工，我是如何定义现代切图的">开工，我是如何定义现代切图的</h2><h3 id="UI_Framework">UI Framework</h3><p>既然所有后台都有计划重做，那么统一风格那就是必须的了。既然需要统一风格，那么一套<code>UI Framework</code>就是必不可少的了。这里选择<code>Bootstrap</code>为基础，通过less进行深度定制，形成公司统一风格UI库。看到这里也许你会说，不就是引用<code>Bootstrap</code>吗，如果你这么想，那你真的只能是切图了，换做我，我会这么做。</p>
+<p>基于<code>Bootstrap</code>使用less进行UI定制。比如基本色调，比如圆角，比如字体大小，比如间距，比如组件样式。通过这些工作你可以深入了解less这么CSS预处理语言，<a href="http://lesscss.org/" target="_blank" rel="external">传送门</a></p>
+<h3 id="自动化构建">自动化构建</h3><p>What the fuck！不就是写静态页吗？这和自动化构建有什么关系？你丫也太能折腾了。</p>
+<p>当然，传统使用DW画页面确实是不需要的。不过如果你是对工作效率有一点点追求的工程师，那么，你一定会采用自动化构建，让我们来看看，自动化之后有什么好处。</p>
+<ol>
+<li>去除重复工作。通过自动化，你可以将重复的工作都交给构建工具来完成，比如通用头部、尾部、banner等等可以抽象成独立模板引入。</li>
+<li>通过构建可以进行less代码编译、压缩、合并等，这一切都在你按下<code>command+s</code>的瞬间完成</li>
+<li>避免出现低级错误。如果你经常切图的话一定出现过，拷贝一个新的HTML后发现样式错乱了，原来是css引用没改名字~~，这类问题都可以通过自动化解决。想想生活是不是美好很多呢。</li>
+<li>解放ctrl+c/v。这就不需要解释了吧~~毕竟80%的代码都是这么产生的嘛。。。</li>
+<li>提高效率。解决了上面的问题，还不能提升你的效率？</li>
+<li>增加技能树，既然是前端来做自动化构建，那么我首推<a href="http://gulpjs.com/" target="_blank" rel="external">gulp</a> 毕竟<code>gulp</code>的口号是<code>Automate and enhance your workflow</code>嘛。</li>
+<li>如果你也是这么做，并且想到有更多益处，请给我留言^_^</li>
+</ol>
+<h3 id="协作">协作</h3><h4 id="传统方式">传统方式</h4><p>传统的前后端切图协作方式是，<code>A</code>（切图仔）将静态页面写好之后，通知 <code>B</code>（后端工程师），将页面通过QQ、Email等方式发送给 <code>B</code>，<code>B</code>将代码下载后，在本地预览，确定符合需求后，将静态页面套成后端模板（例如我司使用的<a href="http://freemarker.org/" target="_blank" rel="external">FreeMarker</a>）。</p>
+<h4 id="配合代码管理工具">配合代码管理工具</h4><p>一个复杂的项目，大多会用到代码管理工具（常用的如Git、SVN等）。有了代码管理工具以后，<code>A</code> 将静态页面写好之后，只需要提交代码，通知 <code>B</code>，<code>B</code>将代码拉取后本地预览，确定符合需求后，将静态页面套成后端模板。</p>
+<h4 id="我是怎么做的？">我是怎么做的？</h4><p>在我司，后端采用的是SVN进行代码管理。我们前端部门采用的是自己搭建的Gitlab。作为一个前端工程师，我毫不掩饰自己对Git的钟爱。让我使用SVN，我是不乐意的。让后端迁移到Git上？这就像空格与Tab的一场圣战~</p>
+<p>当然这不是最主要的，有过切图经验的同学应该都有过这种经验。你幸幸苦苦写完一个页面之后，后端同学往往会发表一些想法（虽然他们自己不写）。这里要改一下，那里改一下，如此等等。产品经理就是这么被揍的，不是吗？为了避免这种情况，最好是不是在后端用之前先让他们看一看？</p>
+<h5 id="我的方案如下：">我的方案如下：</h5><ol>
+<li>提供一个可以在线预览静态页面的地方，后端工程师在使用之前先在线预览页面并给出意见。我采用<code>Node.js</code>提供一个Server服务，提供静态页面预览。</li>
+<li>提供一个在线下载源码的地方，毕竟我不想为了一个代码管理工具，发起一场战斗^_^，通过<code>Node.js</code>提供动态打包压缩功能，支持单个页面独立打包和打包所有页面。</li>
+<li><p>上面的功能应该是自动化的，基于Gitlab的Hook功能，自动构建发布</p>
+<p><img src="http://7xs2h9.com1.z0.glb.clouddn.com/38.pic.jpg" alt="38.pic"></p>
+</li>
+</ol>
+<p><img src="http://7xs2h9.com1.z0.glb.clouddn.com/%E6%B5%81%E7%A8%8B.001.jpeg" alt=""></p>
+<h2 id="一些经验">一些经验</h2><blockquote>
+<p>所谓解决方案，大致可以分为两种: </p>
+<p>一种是普适性的，这种往往会形成一套框架，如：Angular、React、vue等；</p>
+<p>一种是基于特定业务的，这种往往是多个技能树拼凑起来的一套流程</p>
+<p>By vczero</p>
+</blockquote>
+<p>我个人很认可这种说法。我自己更看重基于业务的解决方案，更能够考验一个人的整体素质。</p>
+<p>在我看来，解决方案没有最好，只有更合适，需要工程师在不断自我完善的过程中以不断创新的标准要求自己。我倡导一切技术性研究都应该以业务为基础。</p>
+<p>我在生活中比较喜欢用意淫这个词，在面试中发现有很多程序员喜欢背名词，以前端为例，什么Angular、React、Node.js、NPM、Bower如此等等，再一细问绝大多数都只是停留在一个demo中，并不能领会这些技术的精髓，以及了解技术的适用场景，我把这些称为意淫；工作中经常遇到一大堆整天吹嘘各种技术名词的人，工作中却仍然不能突破自己的舒适区，我把这些也称为意淫；</p>
+<p>写在最后，我个人认为产品经理是这个世界上意淫频率最高的物种。<strong>没错！我就是这么直接。</strong></p>
+<p>写在最后的最后，不论你在从事什么工作，<strong>请成长在每一次业务中</strong></p>
+<p><img src="http://7xs2h9.com1.z0.glb.clouddn.com/14052118207531.jpg" alt=""></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Javascript/">Javascript</a><a href="/tags/前端造世界/">前端造世界</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/前端/">前端</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://zhanyouwei.github.io/2016/07/15/我是如何对待写静态页这项工作的/" data-title="我是如何对待写静态页这项工作的 | Youwei" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2016/05/13/记一次惊心动魄的前端性能优化之旅/"  title="记一次惊心动魄的前端性能优化之旅">
+ <strong>NEXT:</strong><br/> 
+ <span>记一次惊心动魄的前端性能优化之旅
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是静态页"><span class="toc-number">1.</span> <span class="toc-text">什么是静态页</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文章起因"><span class="toc-number">2.</span> <span class="toc-text">文章起因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#磨刀不误砍柴工"><span class="toc-number">3.</span> <span class="toc-text">磨刀不误砍柴工</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#开工之前先了解一下需求"><span class="toc-number">3.1.</span> <span class="toc-text">开工之前先了解一下需求</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开工，我是如何定义现代切图的"><span class="toc-number">4.</span> <span class="toc-text">开工，我是如何定义现代切图的</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#UI_Framework"><span class="toc-number">4.1.</span> <span class="toc-text">UI Framework</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动化构建"><span class="toc-number">4.2.</span> <span class="toc-text">自动化构建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#协作"><span class="toc-number">4.3.</span> <span class="toc-text">协作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#传统方式"><span class="toc-number">4.3.1.</span> <span class="toc-text">传统方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配合代码管理工具"><span class="toc-number">4.3.2.</span> <span class="toc-text">配合代码管理工具</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#我是怎么做的？"><span class="toc-number">4.3.3.</span> <span class="toc-text">我是怎么做的？</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#我的方案如下："><span class="toc-number">4.3.3.1.</span> <span class="toc-text">我的方案如下：</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一些经验"><span class="toc-number">5.</span> <span class="toc-text">一些经验</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	
+	<section class="author-info">
+		
+			<p> 不想做产品的前端不是好爸爸~</p>
+		
+		
+			<p>	有点强迫症，主要是受不了自己。</p>
+		
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/zhanyouwei" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/zhanyouwei" target="_blank" title="github"></a>
+		
+		
+	</div>
+</div>
+<aside class="clearfix">
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/前端/" title="前端">前端<sup>6</sup></a></li>
+		
+			<li><a href="/categories/好文推荐/" title="好文推荐">好文推荐<sup>2</sup></a></li>
+		
+			<li><a href="/categories/服务端/" title="服务端">服务端<sup>1</sup></a></li>
+		
+			<li><a href="/categories/源码分析/" title="源码分析">源码分析<sup>1</sup></a></li>
+		
+			<li><a href="/categories/生活/" title="生活">生活<sup>4</sup></a></li>
+		
+			<li><a href="/categories/运维/" title="运维">运维<sup>1</sup></a></li>
+		
+			<li><a href="/categories/随笔/" title="随笔">随笔<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Backbone/" title="Backbone">Backbone<sup>1</sup></a></li>
+		
+			<li><a href="/tags/HTTP2/" title="HTTP2">HTTP2<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Javascript/" title="Javascript">Javascript<sup>3</sup></a></li>
+		
+			<li><a href="/tags/node-js/" title="node.js">node.js<sup>2</sup></a></li>
+		
+			<li><a href="/tags/oauth2-0/" title="oauth2.0">oauth2.0<sup>1</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>1</sup></a></li>
+		
+			<li><a href="/tags/前端插件/" title="前端插件">前端插件<sup>1</sup></a></li>
+		
+			<li><a href="/tags/前端造世界/" title="前端造世界">前端造世界<sup>4</sup></a></li>
+		
+			<li><a href="/tags/改变/" title="改变">改变<sup>4</sup></a></li>
+		
+			<li><a href="/tags/服务器/" title="服务器">服务器<sup>1</sup></a></li>
+		
+			<li><a href="/tags/程序设计/" title="程序设计">程序设计<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  //back to top
+  function backToTop(){
+    var buttonHTML = $("<a href=\"#top\" id=\"back-top\">" + "<span>Back to Top</span></a>");
+    buttonHTML.appendTo($("body"));
+    var buttonToTop = $("#back-top");
+    // hide #back-top first
+    buttonToTop.hide();
+
+    // fade in #back-top
+    $(function() {
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 200) {
+                buttonToTop.fadeIn();
+            } else {
+                buttonToTop.fadeOut();
+            }
+        });
+        // scroll body to 0px on click
+        buttonToTop.click(function() {
+            $('body,html').animate({
+                scrollTop: 0
+            }, 800);
+            return false;
+        });
+    });
+  }
+  backToTop();
+
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      ta = $('#toc.toc-aside');
+  $(window).resize(function(){
+    getSize();
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      
+      $('#toc.toc-aside').css('display', 'none');
+      
+    }
+  });
+
+  var show = true;
+  c.click(function(){
+    if(show == true){
+        a.addClass('fadeOut').css('display', 'none');
+        ta.css('display', 'block').addClass('fadeIn');
+        m.addClass('moveMain');
+    }else{
+        a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');
+        ta.css('display', 'none');
+        m.removeClass('moveMain');
+        $('#toc.toc-aside').css('display', 'none');
+    }
+    show = !show;
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,240-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});
+</script>
+
+
+
+
+
+
+  </body>
+</html>
